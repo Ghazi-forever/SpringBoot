@@ -1,0 +1,49 @@
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: products_route
+          uri: http://localhost:8081/products
+          predicates:
+            - Path=/products/**
+
+        - id: orders-route
+          uri: lb://orders  # load balanced URL to 'orders' microservice
+          predicates:
+            - Path=/orders/**
+          filters:
+            - RewritePath=/orders/(?<remaining>.*), /$\{remaining}
+
+
+        - id: service-discovery-route
+          uri: http://localhost:8761 #  URL to another microservice
+          predicates:
+             - Path=/eureka/web
+          filters:
+              - SetPath=/
+
+# static resources route for service discovery
+        - id: service-discovery-static-route
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/**
+
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: INFO
+    root: INFO
+
