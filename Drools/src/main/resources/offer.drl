@@ -1,0 +1,27 @@
+package KieRule;
+
+import com.Drools.modal.ekart;
+
+rule "HDFC"
+
+when
+ekartObject : ekart(cardType=="HDFC" && price>10000);
+then
+ekartObject.setDiscount(10);
+end;
+
+rule "ICICI"
+
+when
+ekartObject : ekart(cardType=="ICICI" && price>15000);
+then
+ekartObject.setDiscount(8);
+end;
+
+rule "DBS"
+
+when
+ekartObject : ekart(cardType=="DBS" && price>15000);
+then
+ekartObject.setDiscount(15);
+end;

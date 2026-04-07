@@ -1,0 +1,9 @@
+import com.Drools.modal.Ekart
+
+rule "DiscountRule"
+    when
+        $ekart : Ekart(price > 100)
+    then
+        $ekart.setDiscount(10);
+        update($ekart);
+end
